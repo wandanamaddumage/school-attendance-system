@@ -1,14 +1,17 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { LogOut, GraduationCap, Calendar, BarChart3 } from "lucide-react"
-import type { User } from "@/app/page"
 import { AttendanceMarking } from "@/components/attendance-marking"
 import { AttendanceReports } from "@/components/attendance-reports"
+
+export interface User {
+  id: string
+  name: string
+  email: string
+}
 
 interface TeacherDashboardProps {
   user: User
@@ -20,7 +23,6 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -52,6 +54,7 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
             <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
+          {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
@@ -64,6 +67,7 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
                   <p className="text-xs text-muted-foreground">Grade 5-A, 5-B, 6-A</p>
                 </CardContent>
               </Card>
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Students</CardTitle>
@@ -74,6 +78,7 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
                   <p className="text-xs text-muted-foreground">Across all classes</p>
                 </CardContent>
               </Card>
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Today's Attendance</CardTitle>
@@ -102,6 +107,7 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
                       Completed
                     </Badge>
                   </div>
+
                   <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                     <div>
                       <p className="font-medium">Grade 5-B</p>
@@ -111,6 +117,7 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
                       In Progress
                     </Badge>
                   </div>
+
                   <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
                     <div>
                       <p className="font-medium">Grade 6-A</p>
@@ -123,10 +130,12 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
             </Card>
           </TabsContent>
 
+          {/* Attendance Tab */}
           <TabsContent value="attendance">
             <AttendanceMarking />
           </TabsContent>
 
+          {/* Reports Tab */}
           <TabsContent value="reports">
             <AttendanceReports />
           </TabsContent>

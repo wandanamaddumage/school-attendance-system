@@ -1,26 +1,20 @@
-"use client"
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { UserCheck, Search } from "lucide-react"
-import { useState } from "react"
-
-const mockTeachers = [
-  { id: 1, name: "John Smith", email: "john.smith@school.com", classes: ["Grade 5-A", "Grade 5-B"] },
-  { id: 2, name: "Sarah Johnson", email: "sarah.johnson@school.com", classes: ["Grade 6-A"] },
-  { id: 3, name: "Michael Davis", email: "michael.davis@school.com", classes: ["Grade 6-B", "Grade 7"] },
-  { id: 4, name: "Emily Wilson", email: "emily.wilson@school.com", classes: ["Grade 8-A", "Grade 8-B"] },
-]
+import { useState } from "react";
+import { UserCheck, Search } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { mockTeachers } from "@/data/mockTeachers";
+import { BADGE_VARIANT } from "@/constants/constants";
+import type { Teacher } from "@/types/types";
 
 export function TeacherList() {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("");
 
   const filteredTeachers = mockTeachers.filter(
     (teacher) =>
       teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      teacher.email.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      teacher.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <Card>
@@ -42,7 +36,7 @@ export function TeacherList() {
           />
         </div>
         <div className="space-y-3">
-          {filteredTeachers.map((teacher) => (
+          {filteredTeachers.map((teacher: Teacher) => (
             <div key={teacher.id} className="flex items-center justify-between p-4 bg-muted rounded-lg">
               <div>
                 <p className="font-medium">{teacher.name}</p>
@@ -52,7 +46,7 @@ export function TeacherList() {
                 {teacher.classes.map((className) => (
                   <Badge
                     key={className}
-                    variant="outline"
+                    variant={BADGE_VARIANT}
                     className="bg-primary text-primary-foreground border-primary"
                   >
                     {className}
@@ -64,5 +58,5 @@ export function TeacherList() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

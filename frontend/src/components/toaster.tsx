@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Toast, useToast } from "@/hooks/use-toast";
+import type { Toast } from "@/hooks/use-toast";
+import type { FC } from "react";
 
 type ToasterProps = {
   toasts: Toast[];
