@@ -11,6 +11,7 @@ import { StudentList } from "@/components/student-list"
 import { TeacherList } from "@/components/teacher-list"
 import { AttendanceReports } from "@/components/attendance-reports"
 import type { User } from "@/App"
+import { StudentRegistration } from "./student-registration"
 
 interface AdminDashboardProps {
   user: User
