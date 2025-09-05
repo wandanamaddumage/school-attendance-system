@@ -1,14 +1,17 @@
-"use client"
-
-import type React from "react"
-
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserCheck } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+function useToast() {
+  return {
+    toast: ({ title, description }: { title: string; description: string }) => {
+      alert(`${title}\n${description}`)
+    },
+  }
+}
 
 export function TeacherRegistration() {
   const [name, setName] = useState("")
@@ -21,7 +24,6 @@ export function TeacherRegistration() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
     toast({

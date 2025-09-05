@@ -1,17 +1,20 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { LogOut, Users, UserPlus, BarChart3, Calendar } from "lucide-react"
-import { TeacherRegistration } from "@/components/teacher-registration"
-import { StudentList } from "@/components/student-list"
-import { TeacherList } from "@/components/teacher-list"
+import { TeacherRegistration } from "@/pages/admin/components/teacher-registration"
+import { StudentList } from "@/pages/admin/components/student-list"
+import { TeacherList } from "@/pages/admin/components/teacher-list"
 import { AttendanceReports } from "@/components/attendance-reports"
-import type { User } from "@/App"
-import { StudentRegistration } from "./student-registration"
+import { StudentRegistration } from "./components/student-registration"
+
+export interface User {
+  id: string
+  name: string
+  email: string
+}
 
 interface AdminDashboardProps {
   user: User
@@ -23,7 +26,6 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="border-b bg-card">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -69,6 +71,7 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
                   <p className="text-xs text-muted-foreground">+12 from last month</p>
                 </CardContent>
               </Card>
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
@@ -79,6 +82,7 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
                   <p className="text-xs text-muted-foreground">+2 from last month</p>
                 </CardContent>
               </Card>
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Attendance Rate</CardTitle>
@@ -117,14 +121,17 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
             </Card>
           </TabsContent>
 
+          {/* Students */}
           <TabsContent value="students">
             <StudentList />
           </TabsContent>
 
+          {/* Teachers */}
           <TabsContent value="teachers">
             <TeacherList />
           </TabsContent>
 
+          {/* Register */}
           <TabsContent value="register" className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <StudentRegistration />
@@ -132,6 +139,7 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
             </div>
           </TabsContent>
 
+          {/* Reports */}
           <TabsContent value="reports">
             <AttendanceReports />
           </TabsContent>

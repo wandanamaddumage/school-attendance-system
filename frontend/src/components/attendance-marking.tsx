@@ -1,67 +1,43 @@
-"use client"
+import { useState } from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar, CheckCircle, XCircle, Save } from "lucide-react"
-import { useToast } from "@/hooks/use-toast"
-
-const mockStudents = {
-  "Grade 5-A": [
-    { id: 1, name: "Alice Johnson" },
-    { id: 2, name: "Bob Smith" },
-    { id: 3, name: "Charlie Brown" },
-    { id: 4, name: "Diana Prince" },
-  ],
-  "Grade 5-B": [
-    { id: 5, name: "Carol Davis" },
-    { id: 6, name: "Edward Norton" },
-    { id: 7, name: "Fiona Green" },
-  ],
-  "Grade 6-A": [
-    { id: 8, name: "David Wilson" },
-    { id: 9, name: "Emma Brown" },
-    { id: 10, name: "George Lucas" },
-  ],
-}
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { Calendar, CheckCircle, Save, XCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Button } from "./ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { mockStudents, type Student } from "@/data/mockStudents";
 
 export function AttendanceMarking() {
-  const [selectedClass, setSelectedClass] = useState("")
-  const [attendance, setAttendance] = useState<Record<number, "present" | "absent">>({})
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [attendance, setAttendance] = useState<Record<number, "present" | "absent">>({});
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { toast } = useToast();
 
-  const students = selectedClass ? mockStudents[selectedClass as keyof typeof mockStudents] || [] : []
+  const students: Student[] = selectedClass ? mockStudents[selectedClass] || [] : [];
 
   const handleAttendanceChange = (studentId: number, status: "present" | "absent") => {
-    setAttendance((prev) => ({
-      ...prev,
-      [studentId]: status,
-    }))
-  }
+    setAttendance((prev) => ({ ...prev, [studentId]: status }));
+  };
 
   const handleSubmit = async () => {
-    if (!selectedClass || students.length === 0) return
+    if (!selectedClass || students.length === 0) return;
 
-    setIsLoading(true)
+    setIsLoading(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const presentCount = Object.values(attendance).filter((status) => status === "present").length
-    const totalCount = students.length
+    const presentCount = Object.values(attendance).filter((s) => s === "present").length;
 
     toast({
       title: "Attendance saved successfully",
-      description: `${presentCount}/${totalCount} students marked present for ${selectedClass}`,
-    })
+      description: `${presentCount}/${students.length} students marked present for ${selectedClass}`,
+    });
 
-    setIsLoading(false)
-  }
+    setIsLoading(false);
+  };
 
-  const presentCount = Object.values(attendance).filter((status) => status === "present").length
-  const absentCount = Object.values(attendance).filter((status) => status === "absent").length
+  const presentCount = Object.values(attendance).filter((s) => s === "present").length;
+  const absentCount = Object.values(attendance).filter((s) => s === "absent").length;
 
   return (
     <Card>
@@ -74,6 +50,7 @@ export function AttendanceMarking() {
           Select a class and mark attendance for today ({new Date().toLocaleDateString()})
         </CardDescription>
       </CardHeader>
+
       <CardContent className="space-y-6">
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Class</label>
@@ -82,9 +59,11 @@ export function AttendanceMarking() {
               <SelectValue placeholder="Choose a class to mark attendance" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Grade 5-A">Grade 5-A</SelectItem>
-              <SelectItem value="Grade 5-B">Grade 5-B</SelectItem>
-              <SelectItem value="Grade 6-A">Grade 6-A</SelectItem>
+              {Object.keys(mockStudents).map((className) => (
+                <SelectItem key={className} value={className}>
+                  {className}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -109,7 +88,10 @@ export function AttendanceMarking() {
             <div className="space-y-3">
               <h3 className="font-medium">Students in {selectedClass}</h3>
               {students.map((student) => (
-                <div key={student.id} className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                <div
+                  key={student.id}
+                  className="flex items-center justify-between p-4 bg-muted rounded-lg"
+                >
                   <span className="font-medium">{student.name}</span>
                   <div className="flex gap-2">
                     <Button
@@ -148,5 +130,5 @@ export function AttendanceMarking() {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
