@@ -1,29 +1,64 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { Badge } from "./ui/badge"
-import { Button } from "./ui/button"
-import { BarChart3, Download, Calendar, TrendingUp } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { BarChart3, Calendar, User } from "lucide-react"
 
-const mockReportData = {
-  "Grade 5-A": [
-    { name: "Alice Johnson", present: 18, absent: 2, percentage: 90 },
-    { name: "Bob Smith", present: 16, absent: 4, percentage: 80 },
-    { name: "Carol Davis", present: 19, absent: 1, percentage: 95 },
+const mockAttendanceData = {
+  "Alice Johnson": [
+    { date: "2024-01-15", status: "present" },
+    { date: "2024-01-16", status: "present" },
+    { date: "2024-01-17", status: "absent" },
+    { date: "2024-01-18", status: "present" },
+    { date: "2024-01-19", status: "present" },
   ],
-  "Grade 5-B": [
-    { name: "David Wilson", present: 17, absent: 3, percentage: 85 },
-    { name: "Emma Brown", present: 20, absent: 0, percentage: 100 },
+  "Bob Smith": [
+    { date: "2024-01-15", status: "present" },
+    { date: "2024-01-16", status: "absent" },
+    { date: "2024-01-17", status: "absent" },
+    { date: "2024-01-18", status: "present" },
+    { date: "2024-01-19", status: "present" },
   ],
 }
 
-export function AttendanceReports() {
-  const [selectedClass, setSelectedClass] = useState("")
-  const [reportType, setReportType] = useState("individual")
+const mockClassData = {
+  "Grade 5-A": {
+    totalDays: 20,
+    averageAttendance: 94.2,
+    students: [
+      { name: "Alice Johnson", attendance: 95 },
+      { name: "Bob Smith", attendance: 88 },
+      { name: "Charlie Brown", attendance: 97 },
+    ],
+  },
+  "Grade 5-B": {
+    totalDays: 20,
+    averageAttendance: 91.5,
+    students: [
+      { name: "Carol Davis", attendance: 92 },
+      { name: "Edward Norton", attendance: 89 },
+      { name: "Fiona Green", attendance: 94 },
+    ],
+  },
+}
 
-  const currentData = selectedClass ? mockReportData[selectedClass as keyof typeof mockReportData] || [] : []
+export function AttendanceReports() {
+  const [reportType, setReportType] = useState("")
+  const [selectedStudent, setSelectedStudent] = useState("")
+  const [selectedClass, setSelectedClass] = useState("")
+
+  const studentData = selectedStudent ? mockAttendanceData[selectedStudent as keyof typeof mockAttendanceData] : []
+  const classData = selectedClass ? mockClassData[selectedClass as keyof typeof mockClassData] : null
+
+  const getAttendanceSummary = (data: typeof studentData) => {
+    const total = data.length
+    const present = data.filter((d) => d.status === "present").length
+    const absent = total - present
+    const percentage = total > 0 ? Math.round((present / total) * 100) : 0
+    return { total, present, absent, percentage }
+  }
 
   return (
     <div className="space-y-6">
@@ -33,22 +68,38 @@ export function AttendanceReports() {
             <BarChart3 className="w-5 h-5" />
             Attendance Reports
           </CardTitle>
-          <CardDescription>Generate and view attendance reports</CardDescription>
+          <CardDescription>View detailed attendance reports for students and classes</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Report Type</label>
+            <Select value={reportType} onValueChange={setReportType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select report type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="individual">Individual Student Report</SelectItem>
+                <SelectItem value="class">Class Report</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {reportType === "individual" && (
             <div className="space-y-2">
-              <label className="text-sm font-medium">Report Type</label>
-              <Select value={reportType} onValueChange={setReportType}>
+              <label className="text-sm font-medium">Select Student</label>
+              <Select value={selectedStudent} onValueChange={setSelectedStudent}>
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Choose a student" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="individual">Individual Student Report</SelectItem>
-                  <SelectItem value="class">Class Report</SelectItem>
+                  <SelectItem value="Alice Johnson">Alice Johnson</SelectItem>
+                  <SelectItem value="Bob Smith">Bob Smith</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          )}
+
+          {reportType === "class" && (
             <div className="space-y-2">
               <label className="text-sm font-medium">Select Class</label>
               <Select value={selectedClass} onValueChange={setSelectedClass}>
@@ -58,103 +109,118 @@ export function AttendanceReports() {
                 <SelectContent>
                   <SelectItem value="Grade 5-A">Grade 5-A</SelectItem>
                   <SelectItem value="Grade 5-B">Grade 5-B</SelectItem>
-                  <SelectItem value="Grade 6-A">Grade 6-A</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 
-      {selectedClass && (
+      {reportType === "individual" && selectedStudent && studentData.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center gap-2">
-                <Calendar className="w-5 h-5" />
-                {reportType === "individual" ? "Individual" : "Class"} Report - {selectedClass}
-              </span>
-              <Button size="sm" variant="outline">
-                <Download className="w-4 h-4 mr-2" />
-                Export
-              </Button>
+            <CardTitle className="flex items-center gap-2">
+              <User className="w-5 h-5" />
+              {selectedStudent} - Attendance Report
             </CardTitle>
-            <CardDescription>Attendance data for the current month</CardDescription>
           </CardHeader>
-          <CardContent>
-            {reportType === "individual" ? (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium">Average Attendance</span>
-                      </div>
-                      <p className="text-2xl font-bold mt-2">
-                        {Math.round(
-                          currentData.reduce((acc, student) => acc + student.percentage, 0) / currentData.length,
-                        )}
-                        %
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium">Total Students</span>
-                      </div>
-                      <p className="text-2xl font-bold mt-2">{currentData.length}</p>
-                    </CardContent>
-                  </Card>
-                  <Card>
-                    <CardContent className="pt-6">
-                      <div className="flex items-center gap-2">
-                        <BarChart3 className="w-4 h-4 text-primary" />
-                        <span className="text-sm font-medium">Perfect Attendance</span>
-                      </div>
-                      <p className="text-2xl font-bold mt-2">
-                        {currentData.filter((s) => s.percentage === 100).length}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="space-y-3">
-                  {currentData.map((student, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg">
-                      <div>
-                        <p className="font-medium">{student.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          Present: {student.present} days • Absent: {student.absent} days
-                        </p>
-                      </div>
-                      <Badge
-                        variant={
-                          student.percentage >= 90 ? "default" : student.percentage >= 75 ? "secondary" : "destructive"
-                        }
-                      >
-                        {student.percentage}%
-                      </Badge>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {(() => {
+                const summary = getAttendanceSummary(studentData)
+                return (
+                  <>
+                    <div className="text-center p-4 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold">{summary.total}</p>
+                      <p className="text-sm text-muted-foreground">Total Days</p>
                     </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="text-center p-8 bg-muted rounded-lg">
-                  <BarChart3 className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium mb-2">Class Summary Report</h3>
-                  <p className="text-muted-foreground mb-4">Overall attendance rate for {selectedClass}</p>
-                  <div className="text-3xl font-bold text-primary">
-                    {Math.round(currentData.reduce((acc, student) => acc + student.percentage, 0) / currentData.length)}
-                    %
+                    <div className="text-center p-4 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold text-chart-4">{summary.present}</p>
+                      <p className="text-sm text-muted-foreground">Present</p>
+                    </div>
+                    <div className="text-center p-4 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold text-destructive">{summary.absent}</p>
+                      <p className="text-sm text-muted-foreground">Absent</p>
+                    </div>
+                    <div className="text-center p-4 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold">{summary.percentage}%</p>
+                      <p className="text-sm text-muted-foreground">Attendance</p>
+                    </div>
+                  </>
+                )
+              })()}
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-medium">Daily Attendance</h3>
+              {studentData.map((record, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-4 h-4 text-muted-foreground" />
+                    <span>{new Date(record.date).toLocaleDateString()}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-2">Based on {currentData.length} students</p>
+                  <Badge
+                    variant={record.status === "present" ? "default" : "destructive"}
+                    className={record.status === "present" ? "bg-chart-4 text-white" : ""}
+                  >
+                    {record.status === "present" ? "Present" : "Absent"}
+                  </Badge>
                 </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {reportType === "class" && selectedClass && classData && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <BarChart3 className="w-5 h-5" />
+              {selectedClass} - Class Report
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <p className="text-2xl font-bold">{classData.totalDays}</p>
+                <p className="text-sm text-muted-foreground">Total Days</p>
               </div>
-            )}
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <p className="text-2xl font-bold">{classData.students.length}</p>
+                <p className="text-sm text-muted-foreground">Students</p>
+              </div>
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <p className="text-2xl font-bold">{classData.averageAttendance}%</p>
+                <p className="text-sm text-muted-foreground">Average Attendance</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h3 className="font-medium">Student Performance</h3>
+              {classData.students.map((student, index) => (
+                <div key={index} className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                  <span className="font-medium">{student.name}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium">{student.attendance}%</span>
+                    <Badge
+                      variant={
+                        student.attendance >= 90 ? "default" : student.attendance >= 80 ? "secondary" : "destructive"
+                      }
+                      className={
+                        student.attendance >= 90
+                          ? "bg-chart-4 text-white"
+                          : student.attendance >= 80
+                            ? "bg-secondary text-secondary-foreground"
+                            : ""
+                      }
+                    >
+                      {student.attendance >= 90 ? "Excellent" : student.attendance >= 80 ? "Good" : "Needs Attention"}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       )}

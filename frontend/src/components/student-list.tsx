@@ -1,17 +1,18 @@
 "use client"
 
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Users, Search } from "lucide-react"
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
-import { Input } from "./ui/input"
-import { Badge } from "./ui/badge"
-import { Search, Users } from "lucide-react"
 
 const mockStudents = [
-  { id: "1", name: "Alice Johnson", grade: "Grade 5-A", attendance: 95 },
-  { id: "2", name: "Bob Smith", grade: "Grade 5-A", attendance: 88 },
-  { id: "3", name: "Carol Davis", grade: "Grade 5-B", attendance: 92 },
-  { id: "4", name: "David Wilson", grade: "Grade 6-A", attendance: 85 },
-  { id: "5", name: "Emma Brown", grade: "Grade 6-A", attendance: 97 },
+  { id: 1, name: "Alice Johnson", grade: "Grade 5-A", attendance: 95 },
+  { id: 2, name: "Bob Smith", grade: "Grade 5-A", attendance: 88 },
+  { id: 3, name: "Carol Davis", grade: "Grade 5-B", attendance: 92 },
+  { id: 4, name: "David Wilson", grade: "Grade 6-A", attendance: 85 },
+  { id: 5, name: "Emma Brown", grade: "Grade 6-A", attendance: 97 },
+  { id: 6, name: "Frank Miller", grade: "Grade 6-B", attendance: 90 },
 ]
 
 export function StudentList() {
@@ -36,7 +37,7 @@ export function StudentList() {
         <div className="relative">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search students..."
+            placeholder="Search students by name or grade..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"
@@ -49,9 +50,26 @@ export function StudentList() {
                 <p className="font-medium">{student.name}</p>
                 <p className="text-sm text-muted-foreground">{student.grade}</p>
               </div>
-              <Badge variant={student.attendance >= 90 ? "default" : "secondary"}>
-                {student.attendance}% Attendance
-              </Badge>
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium">{student.attendance}%</p>
+                  <p className="text-xs text-muted-foreground">Attendance</p>
+                </div>
+                <Badge
+                  variant={
+                    student.attendance >= 90 ? "default" : student.attendance >= 80 ? "secondary" : "destructive"
+                  }
+                  className={
+                    student.attendance >= 90
+                      ? "bg-chart-4 text-white"
+                      : student.attendance >= 80
+                        ? "bg-secondary text-secondary-foreground"
+                        : "bg-destructive text-destructive-foreground"
+                  }
+                >
+                  {student.attendance >= 90 ? "Excellent" : student.attendance >= 80 ? "Good" : "Needs Attention"}
+                </Badge>
+              </div>
             </div>
           ))}
         </div>
