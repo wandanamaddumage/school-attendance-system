@@ -1,19 +1,21 @@
 "use client"
 
 import type React from "react"
+
 import { useState } from "react"
-import { Button } from "./ui/button"
-import { Input } from "./ui/input"
-import { Label } from "./ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { GraduationCap } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { UserCheck } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 export function TeacherRegistration() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
-  const [subject, setSubject] = useState("")
+  const [password, setPassword] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -22,11 +24,14 @@ export function TeacherRegistration() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    alert(`Teacher registered successfully: ${name} (${subject}) has been added to the system`)
+    toast({
+      title: "Teacher registered successfully",
+      description: `${name} has been added to the system`,
+    })
 
     setName("")
     setEmail("")
-    setSubject("")
+    setPassword("")
     setIsLoading(false)
   }
 
@@ -34,7 +39,7 @@ export function TeacherRegistration() {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <GraduationCap className="w-5 h-5" />
+          <UserCheck className="w-5 h-5" />
           Register Teacher
         </CardTitle>
         <CardDescription>Add a new teacher to the system</CardDescription>
@@ -63,22 +68,15 @@ export function TeacherRegistration() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="teacher-subject">Subject</Label>
-            <Select value={subject} onValueChange={setSubject} required>
-              <SelectTrigger>
-                <SelectValue placeholder="Select subject" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Mathematics">Mathematics</SelectItem>
-                <SelectItem value="English">English</SelectItem>
-                <SelectItem value="Science">Science</SelectItem>
-                <SelectItem value="Social Studies">Social Studies</SelectItem>
-                <SelectItem value="Physical Education">Physical Education</SelectItem>
-                <SelectItem value="Art">Art</SelectItem>
-                <SelectItem value="Music">Music</SelectItem>
-                <SelectItem value="Computer Science">Computer Science</SelectItem>
-              </SelectContent>
-            </Select>
+            <Label htmlFor="teacher-password">Password</Label>
+            <Input
+              id="teacher-password"
+              type="password"
+              placeholder="Enter temporary password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? "Registering..." : "Register Teacher"}

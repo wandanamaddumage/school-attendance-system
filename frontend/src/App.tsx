@@ -2,9 +2,8 @@
 
 import { useState } from "react"
 import { LoginForm } from "./components/login-form"
-import { AdminDashboard } from "./components/admin-dashboard"
 import { TeacherDashboard } from "./components/teacher-dashboard"
-import "./App.css"
+import { AdminDashboard } from "./components/admin-dashboard"
 
 export type UserRole = "admin" | "teacher"
 
@@ -15,7 +14,7 @@ export interface User {
   role: UserRole
 }
 
-function App() {
+export default function HomePage() {
   const [currentUser, setCurrentUser] = useState<User | null>(null)
 
   const handleLogin = (user: User) => {
@@ -40,5 +39,3 @@ function App() {
     </div>
   )
 }
-
-export default App
