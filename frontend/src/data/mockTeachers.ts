@@ -1,4 +1,4 @@
-import type { Teacher } from "./types";
+import type { Teacher } from "@/types/types";
 
 export const mockTeachers: Teacher[] = [
   { id: 1, name: "John Smith", email: "john.smith@school.com", classes: ["Grade 5-A", "Grade 5-B"] },
