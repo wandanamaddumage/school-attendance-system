@@ -9,12 +9,7 @@ import { StudentList } from "@/pages/admin/components/student-list"
 import { TeacherList } from "@/pages/admin/components/teacher-list"
 import { AttendanceReports } from "@/components/attendance-reports"
 import { StudentRegistration } from "./components/student-registration"
-
-export interface User {
-  id: string
-  name: string
-  email: string
-}
+import type { User } from "@/types/types"
 
 interface AdminDashboardProps {
   user: User

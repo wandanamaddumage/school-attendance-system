@@ -38,7 +38,6 @@ export function LoginForm({ onLogin }: LoginFormProps) {
         role: "teacher",
       })
     }
-
     setIsLoading(false)
   }
 

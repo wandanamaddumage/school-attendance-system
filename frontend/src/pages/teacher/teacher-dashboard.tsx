@@ -6,12 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { LogOut, GraduationCap, Calendar, BarChart3 } from "lucide-react"
 import { AttendanceMarking } from "@/components/attendance-marking"
 import { AttendanceReports } from "@/components/attendance-reports"
-
-export interface User {
-  id: string
-  name: string
-  email: string
-}
+import type { User } from "@/types/types"
 
 interface TeacherDashboardProps {
   user: User
