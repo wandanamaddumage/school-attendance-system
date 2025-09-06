@@ -3,8 +3,9 @@ import { Users, Search } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { mockStudents, type Student } from "@/data/mockStudents";
+import { mockStudents } from "@/data/mockStudents";
 import { ATTENDANCE_LABELS, ATTENDANCE_THRESHOLDS } from "@/constants/constants";
+import type { Student } from "@/types/types";
 
 const studentWithAttendance = (student: Student) => ({
   ...student,

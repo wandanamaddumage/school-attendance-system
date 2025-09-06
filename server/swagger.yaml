@@ -1,0 +1,662 @@
+openapi: 3.0.3
+info:
+  title: School Attendance System API
+  description: |
+    API for managing school attendance system with role-based access control.
+
+    ## Authentication
+    This API uses Laravel Sanctum for authentication. Include the Bearer token in the Authorization header for protected endpoints.
+
+    ## Roles
+    - **Admin**: Can manage teachers, classes, and students
+    - **Teacher**: Can mark attendance and view reports
+
+    ## Base URL
+    - Development: `http://127.0.0.1:8000/api`
+  version: 1.0.0
+  contact:
+    name: School Attendance System
+    email: admin@school.com
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: Development server
+  - url: https://api.school.com/api
+    description: Production server
+
+security:
+  - bearerAuth: []
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user and receive access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@school.com
+                password:
+                  type: string
+                  format: password
+                  example: password123
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  token:
+                    type: string
+                    example: "1|abc123def456ghi789jkl012mno345pqr678stu901vwx234yz"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: User logout
+      description: Logout user and revoke access token
+      responses:
+        "200":
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Logged out successfully"
+
+  /teachers:
+    post:
+      tags:
+        - Admin - Teacher Management
+      summary: Create teacher
+      description: Create a new teacher (Admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: "john.doe@school.com"
+                password:
+                  type: string
+                  minLength: 8
+                  example: "password123"
+      responses:
+        "201":
+          description: Teacher created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+    get:
+      tags:
+        - Admin - Teacher Management
+      summary: Get all teachers
+      description: Retrieve all teachers (Admin only)
+      responses:
+        "200":
+          description: List of teachers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  /classes:
+    post:
+      tags:
+        - Admin - Class Management
+      summary: Create class
+      description: Create a new class (Admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "Grade 10A"
+      responses:
+        "201":
+          description: Class created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchoolClass"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+    get:
+      tags:
+        - Admin - Class Management
+      summary: Get all classes
+      description: Retrieve all classes with students (Admin only)
+      responses:
+        "200":
+          description: List of classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/SchoolClass"
+                    - type: object
+                      properties:
+                        students:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/Student"
+
+  /students:
+    post:
+      tags:
+        - Admin - Student Management
+      summary: Create student
+      description: Create a new student (Admin only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - class_id
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                  example: "Alice Johnson"
+                class_id:
+                  type: integer
+                  example: 1
+      responses:
+        "201":
+          description: Student created successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Student"
+                  - type: object
+                    properties:
+                      class:
+                        $ref: "#/components/schemas/SchoolClass"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+    get:
+      tags:
+        - Admin - Student Management
+      summary: Get all students
+      description: Retrieve all students with optional class filter (Admin only)
+      parameters:
+        - name: class_id
+          in: query
+          description: Filter by class ID
+          required: false
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: List of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/Student"
+                    - type: object
+                      properties:
+                        class:
+                          $ref: "#/components/schemas/SchoolClass"
+
+  /teacher/classes:
+    get:
+      tags:
+        - Teacher - Class Access
+      summary: Get teacher classes
+      description: Retrieve classes accessible by teacher (Teacher only)
+      responses:
+        "200":
+          description: List of classes with students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/SchoolClass"
+                    - type: object
+                      properties:
+                        students:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/Student"
+
+  /teacher/students:
+    get:
+      tags:
+        - Teacher - Class Access
+      summary: Get teacher students
+      description: Retrieve students accessible by teacher (Teacher only)
+      parameters:
+        - name: class_id
+          in: query
+          description: Filter by class ID
+          required: false
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: List of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                    - $ref: "#/components/schemas/Student"
+                    - type: object
+                      properties:
+                        class:
+                          $ref: "#/components/schemas/SchoolClass"
+
+  /attendance/mark:
+    post:
+      tags:
+        - Teacher - Attendance
+      summary: Mark attendance
+      description: Mark attendance for students in a class (Teacher only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - class_id
+                - date
+                - attendances
+              properties:
+                class_id:
+                  type: integer
+                  example: 1
+                date:
+                  type: string
+                  format: date
+                  example: "2024-01-15"
+                attendances:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - student_id
+                      - status
+                    properties:
+                      student_id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        enum: [present, absent]
+                        example: "present"
+      responses:
+        "201":
+          description: Attendance marked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Attendance marked successfully"
+                  count:
+                    type: integer
+                    example: 2
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Some students do not belong to the specified class"
+        "409":
+          description: Conflict - Attendance already marked
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Attendance already marked for this class and date"
+        "422":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+
+  /reports/student/{student}:
+    get:
+      tags:
+        - Reports
+      summary: Student report
+      description: Get student attendance history and summary (Admin/Teacher)
+      parameters:
+        - name: student
+          in: path
+          required: true
+          description: Student ID
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Student report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  student:
+                    allOf:
+                      - $ref: "#/components/schemas/Student"
+                      - type: object
+                        properties:
+                          class:
+                            $ref: "#/components/schemas/SchoolClass"
+                  summary:
+                    type: object
+                    properties:
+                      total_days:
+                        type: integer
+                        example: 10
+                      present_days:
+                        type: integer
+                        example: 8
+                      absent_days:
+                        type: integer
+                        example: 2
+                      attendance_percentage:
+                        type: number
+                        format: float
+                        example: 80.0
+                  history:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Attendance"
+                        - type: object
+                          properties:
+                            class:
+                              $ref: "#/components/schemas/SchoolClass"
+                            teacher:
+                              $ref: "#/components/schemas/User"
+
+  /reports/class:
+    get:
+      tags:
+        - Reports
+      summary: Class monthly report
+      description: Get class monthly attendance report (Admin/Teacher)
+      parameters:
+        - name: class_id
+          in: query
+          required: true
+          description: Class ID
+          schema:
+            type: integer
+            example: 1
+        - name: month
+          in: query
+          required: true
+          description: Month in YYYY-MM format
+          schema:
+            type: string
+            pattern: '^\d{4}-\d{2}$'
+            example: "2024-01"
+      responses:
+        "200":
+          description: Class monthly report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  class_id:
+                    type: integer
+                    example: 1
+                  month:
+                    type: string
+                    example: "2024-01"
+                  students:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        student_id:
+                          type: integer
+                          example: 1
+                        student_name:
+                          type: string
+                          example: "Alice Johnson"
+                        total_days:
+                          type: integer
+                          example: 10
+                        present_days:
+                          type: integer
+                          example: 8
+                        absent_days:
+                          type: integer
+                          example: 2
+                        attendance_percentage:
+                          type: number
+                          format: float
+                          example: 80.0
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "john.doe@school.com"
+        role:
+          type: string
+          enum: [admin, teacher]
+          example: "teacher"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T00:00:00.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T00:00:00.000000Z"
+
+    SchoolClass:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Grade 10A"
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T00:00:00.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T00:00:00.000000Z"
+
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Alice Johnson"
+        class_id:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T00:00:00.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-01T00:00:00.000000Z"
+
+    Attendance:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        student_id:
+          type: integer
+          example: 1
+        class_id:
+          type: integer
+          example: 1
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        status:
+          type: string
+          enum: [present, absent]
+          example: "present"
+        teacher_id:
+          type: integer
+          example: 2
+        created_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T00:00:00.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T00:00:00.000000Z"
+
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "The given data was invalid."
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email: ["The email field is required."]
+            password: ["The password field is required."]
+
+tags:
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Admin - Teacher Management
+    description: Teacher management endpoints (Admin only)
+  - name: Admin - Class Management
+    description: Class management endpoints (Admin only)
+  - name: Admin - Student Management
+    description: Student management endpoints (Admin only)
+  - name: Teacher - Class Access
+    description: Class access endpoints (Teacher only)
+  - name: Teacher - Attendance
+    description: Attendance marking endpoints (Teacher only)
+  - name: Reports
+    description: Report generation endpoints (Admin/Teacher)

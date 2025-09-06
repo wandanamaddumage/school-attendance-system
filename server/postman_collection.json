@@ -1,0 +1,867 @@
+{
+    "info": {
+        "name": "School Attendance System API",
+        "description": "API collection for the School Attendance Management System",
+        "version": "1.0.0",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{auth_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://127.0.0.1:8000/api",
+            "type": "string"
+        },
+        {
+            "key": "auth_token",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@school.com\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "login"]
+                        },
+                        "description": "Login user and get authentication token"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"email\": \"admin@school.com\",\n  \"password\": \"password123\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/auth/login",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["auth", "login"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Admin User\",\n    \"email\": \"admin@school.com\",\n    \"role\": \"admin\",\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n  },\n  \"token\": \"1|abc123def456ghi789jkl012mno345pqr678stu901vwx234yz\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/logout",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "logout"]
+                        },
+                        "description": "Logout user and revoke authentication token"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/auth/logout",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["auth", "logout"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"message\": \"Logged out successfully\"\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin - Teacher Management",
+            "item": [
+                {
+                    "name": "Create Teacher",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@school.com\",\n  \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/teachers",
+                            "host": ["{{base_url}}"],
+                            "path": ["teachers"]
+                        },
+                        "description": "Create a new teacher (Admin only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@school.com\",\n  \"password\": \"password123\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/teachers",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["teachers"]
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"id\": 2,\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@school.com\",\n  \"role\": \"teacher\",\n  \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n  \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get All Teachers",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/teachers",
+                            "host": ["{{base_url}}"],
+                            "path": ["teachers"]
+                        },
+                        "description": "Get all teachers (Admin only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/teachers",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["teachers"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n  {\n    \"id\": 2,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@school.com\",\n    \"role\": \"teacher\",\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n  }\n]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin - Class Management",
+            "item": [
+                {
+                    "name": "Create Class",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Grade 10A\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/classes",
+                            "host": ["{{base_url}}"],
+                            "path": ["classes"]
+                        },
+                        "description": "Create a new class (Admin only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Grade 10A\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/classes",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["classes"]
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"Grade 10A\",\n  \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n  \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get All Classes",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/classes",
+                            "host": ["{{base_url}}"],
+                            "path": ["classes"]
+                        },
+                        "description": "Get all classes with students (Admin only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/classes",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["classes"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Grade 10A\",\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"students\": []\n  }\n]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Admin - Student Management",
+            "item": [
+                {
+                    "name": "Create Student",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Alice Johnson\",\n  \"class_id\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/students",
+                            "host": ["{{base_url}}"],
+                            "path": ["students"]
+                        },
+                        "description": "Create a new student (Admin only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"Alice Johnson\",\n  \"class_id\": 1\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/students",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["students"]
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"Alice Johnson\",\n  \"class_id\": 1,\n  \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n  \"updated_at\": \"2024-01-01T00:00:00.000000Z\",\n  \"class\": {\n    \"id\": 1,\n    \"name\": \"Grade 10A\",\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n  }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get All Students",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/students?class_id=1",
+                            "host": ["{{base_url}}"],
+                            "path": ["students"],
+                            "query": [
+                                {
+                                    "key": "class_id",
+                                    "value": "1",
+                                    "description": "Optional: Filter by class ID"
+                                }
+                            ]
+                        },
+                        "description": "Get all students with optional class filter (Admin only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/students?class_id=1",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["students"],
+                                    "query": [
+                                        {
+                                            "key": "class_id",
+                                            "value": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Alice Johnson\",\n    \"class_id\": 1,\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"class\": {\n      \"id\": 1,\n      \"name\": \"Grade 10A\",\n      \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n      \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n    }\n  }\n]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Teacher - Class Access",
+            "item": [
+                {
+                    "name": "Get Teacher Classes",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/teacher/classes",
+                            "host": ["{{base_url}}"],
+                            "path": ["teacher", "classes"]
+                        },
+                        "description": "Get classes accessible by teacher (Teacher only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/teacher/classes",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["teacher", "classes"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Grade 10A\",\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"students\": [\n      {\n        \"id\": 1,\n        \"name\": \"Alice Johnson\",\n        \"class_id\": 1,\n        \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n        \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n      }\n    ]\n  }\n]"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get Teacher Students",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/teacher/students?class_id=1",
+                            "host": ["{{base_url}}"],
+                            "path": ["teacher", "students"],
+                            "query": [
+                                {
+                                    "key": "class_id",
+                                    "value": "1",
+                                    "description": "Optional: Filter by class ID"
+                                }
+                            ]
+                        },
+                        "description": "Get students accessible by teacher (Teacher only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/teacher/students?class_id=1",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["teacher", "students"],
+                                    "query": [
+                                        {
+                                            "key": "class_id",
+                                            "value": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n  {\n    \"id\": 1,\n    \"name\": \"Alice Johnson\",\n    \"class_id\": 1,\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"class\": {\n      \"id\": 1,\n      \"name\": \"Grade 10A\",\n      \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n      \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n    }\n  }\n]"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Teacher - Attendance",
+            "item": [
+                {
+                    "name": "Mark Attendance",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"class_id\": 1,\n  \"date\": \"2024-01-15\",\n  \"attendances\": [\n    {\n      \"student_id\": 1,\n      \"status\": \"present\"\n    },\n    {\n      \"student_id\": 2,\n      \"status\": \"absent\"\n    }\n  ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/attendance/mark",
+                            "host": ["{{base_url}}"],
+                            "path": ["attendance", "mark"]
+                        },
+                        "description": "Mark attendance for students in a class (Teacher only)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"class_id\": 1,\n  \"date\": \"2024-01-15\",\n  \"attendances\": [\n    {\n      \"student_id\": 1,\n      \"status\": \"present\"\n    },\n    {\n      \"student_id\": 2,\n      \"status\": \"absent\"\n    }\n  ]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/attendance/mark",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["attendance", "mark"]
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"message\": \"Attendance marked successfully\",\n  \"count\": 2\n}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Reports",
+            "item": [
+                {
+                    "name": "Student Report",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/reports/student/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["reports", "student", "1"]
+                        },
+                        "description": "Get student attendance history and summary (Admin/Teacher)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/reports/student/1",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["reports", "student", "1"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"student\": {\n    \"id\": 1,\n    \"name\": \"Alice Johnson\",\n    \"class_id\": 1,\n    \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"updated_at\": \"2024-01-01T00:00:00.000000Z\",\n    \"class\": {\n      \"id\": 1,\n      \"name\": \"Grade 10A\",\n      \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n      \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n    }\n  },\n  \"summary\": {\n    \"total_days\": 10,\n    \"present_days\": 8,\n    \"absent_days\": 2,\n    \"attendance_percentage\": 80.0\n  },\n  \"history\": [\n    {\n      \"id\": 1,\n      \"student_id\": 1,\n      \"class_id\": 1,\n      \"date\": \"2024-01-15\",\n      \"status\": \"present\",\n      \"teacher_id\": 2,\n      \"created_at\": \"2024-01-15T00:00:00.000000Z\",\n      \"updated_at\": \"2024-01-15T00:00:00.000000Z\",\n      \"class\": {\n        \"id\": 1,\n        \"name\": \"Grade 10A\",\n        \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n        \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n      },\n      \"teacher\": {\n        \"id\": 2,\n        \"name\": \"John Doe\",\n        \"email\": \"john.doe@school.com\",\n        \"role\": \"teacher\",\n        \"created_at\": \"2024-01-01T00:00:00.000000Z\",\n        \"updated_at\": \"2024-01-01T00:00:00.000000Z\"\n      }\n    }\n  ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Class Monthly Report",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{auth_token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/reports/class?class_id=1&month=2024-01",
+                            "host": ["{{base_url}}"],
+                            "path": ["reports", "class"],
+                            "query": [
+                                {
+                                    "key": "class_id",
+                                    "value": "1",
+                                    "description": "Class ID"
+                                },
+                                {
+                                    "key": "month",
+                                    "value": "2024-01",
+                                    "description": "Month in YYYY-MM format"
+                                }
+                            ]
+                        },
+                        "description": "Get class monthly attendance report (Admin/Teacher)"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{auth_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/reports/class?class_id=1&month=2024-01",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["reports", "class"],
+                                    "query": [
+                                        {
+                                            "key": "class_id",
+                                            "value": "1"
+                                        },
+                                        {
+                                            "key": "month",
+                                            "value": "2024-01"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n  \"class_id\": 1,\n  \"month\": \"2024-01\",\n  \"students\": [\n    {\n      \"student_id\": 1,\n      \"student_name\": \"Alice Johnson\",\n      \"total_days\": 10,\n      \"present_days\": 8,\n      \"absent_days\": 2,\n      \"attendance_percentage\": 80.0\n    },\n    {\n      \"student_id\": 2,\n      \"student_name\": \"Bob Smith\",\n      \"total_days\": 10,\n      \"present_days\": 9,\n      \"absent_days\": 1,\n      \"attendance_percentage\": 90.0\n    }\n  ]\n}"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
