@@ -1,19 +1,30 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Calendar, CheckCircle, Save, XCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { mockStudents, type Student } from "@/data/mockStudents";
+import { GRADES } from "@/constants/constants";
+import { useGetStudentsByClassQuery } from "@/store/api/splits/classes";
+import { skipToken } from "@reduxjs/toolkit/query/react";
+
 
 export function AttendanceMarking() {
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [attendance, setAttendance] = useState<Record<number, "present" | "absent">>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const students: Student[] = selectedClass ? mockStudents[selectedClass] || [] : [];
+  // Fetch students whenever selectedClass changes
+  const { data: students = [], isLoading: isStudentsLoading, refetch } = useGetStudentsByClassQuery(
+    selectedClass ? { class_id: Number(selectedClass) } : skipToken, // skip if no class selected
+    { skip: !selectedClass } 
+  );
+
+  // Reset attendance when class changes
+  useEffect(() => {
+    setAttendance({});
+  }, [selectedClass]);
 
   const handleAttendanceChange = (studentId: number, status: "present" | "absent") => {
     setAttendance((prev) => ({ ...prev, [studentId]: status }));
@@ -22,18 +33,29 @@ export function AttendanceMarking() {
   const handleSubmit = async () => {
     if (!selectedClass || students.length === 0) return;
 
-    setIsLoading(true);
+    setIsSubmitting(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    try {
+      // Call your attendance API here
+      // Example: await markAttendanceMutation({ class_id: Number(selectedClass), date: new Date().toISOString().split('T')[0], attendances: students.map(s => ({ student_id: s.id, status: attendance[s.id] || "absent" })) });
 
-    const presentCount = Object.values(attendance).filter((s) => s === "present").length;
+      const presentCount = Object.values(attendance).filter((s) => s === "present").length;
 
-    toast({
-      title: "Attendance saved successfully",
-      description: `${presentCount}/${students.length} students marked present for ${selectedClass}`,
-    });
-
-    setIsLoading(false);
+      toast({
+        title: "Attendance saved successfully",
+        description: `${presentCount}/${students.length} students marked present for ${
+          GRADES.find((g) => g.id === Number(selectedClass))?.label || selectedClass
+        }`,
+      });
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Failed to save attendance",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const presentCount = Object.values(attendance).filter((s) => s === "present").length;
@@ -56,19 +78,19 @@ export function AttendanceMarking() {
           <label className="text-sm font-medium">Select Class</label>
           <Select value={selectedClass} onValueChange={setSelectedClass}>
             <SelectTrigger>
-              <SelectValue placeholder="Choose a class to mark attendance" />
+              <SelectValue placeholder="Select class/grade" />
             </SelectTrigger>
             <SelectContent>
-              {Object.keys(mockStudents).map((className) => (
-                <SelectItem key={className} value={className}>
-                  {className}
+              {GRADES.map((grade) => (
+                <SelectItem key={grade.id} value={String(grade.id)}>
+                  {grade.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        {selectedClass && students.length > 0 && (
+        {selectedClass && !isStudentsLoading && students.length > 0 && (
           <>
             <div className="flex gap-4 p-4 bg-muted rounded-lg">
               <div className="text-center">
@@ -86,7 +108,7 @@ export function AttendanceMarking() {
             </div>
 
             <div className="space-y-3">
-              <h3 className="font-medium">Students in {selectedClass}</h3>
+              <h3 className="font-medium">Students in {GRADES.find((g) => g.id === Number(selectedClass))?.label}</h3>
               {students.map((student) => (
                 <div
                   key={student.id}
@@ -121,10 +143,12 @@ export function AttendanceMarking() {
             <Button
               onClick={handleSubmit}
               className="w-full"
-              disabled={isLoading || Object.keys(attendance).length !== students.length}
+              disabled={
+                isSubmitting || Object.keys(attendance).length !== students.length
+              }
             >
               <Save className="w-4 h-4 mr-2" />
-              {isLoading ? "Saving..." : "Save Attendance"}
+              {isSubmitting ? "Saving..." : "Save Attendance"}
             </Button>
           </>
         )}

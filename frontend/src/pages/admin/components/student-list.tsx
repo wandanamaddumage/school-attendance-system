@@ -7,25 +7,17 @@ import { ATTENDANCE_LABELS, ATTENDANCE_THRESHOLDS } from "@/constants/constants"
 import type { Student } from "@/types/types";
 import { useGetAllStudentsQuery } from "@/store/api/splits/students";
 
-const studentWithAttendance = (student: Student) => ({
-  ...student,
-  attendance: Math.floor(Math.random() * 21) + 80, // fake attendance for demo
-});
-
 export function StudentList() {
   const [searchTerm, setSearchTerm] = useState("");
 
   // ✅ Fetch students from API
   const { data: students = [], isLoading, isError } = useGetAllStudentsQuery();
 
-  // Add attendance values
-  const allStudents = students.map(studentWithAttendance);
-
   // ✅ Filtering by name or grade
-  const filteredStudents = allStudents.filter(
+  const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.grade?.toLowerCase().includes(searchTerm.toLowerCase())
+      student.class?.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getAttendanceVariant = (attendance: number) => {
@@ -66,36 +58,37 @@ export function StudentList() {
           />
         </div>
 
-        {/* ✅ Loading / Error states */}
         {isLoading && <p className="text-sm text-muted-foreground">Loading students...</p>}
         {isError && <p className="text-sm text-red-500">Failed to load students.</p>}
 
         <div className="space-y-3">
-          {filteredStudents.map((student) => (
-            <div
-              key={student.id}
-              className="flex items-center justify-between p-4 bg-muted rounded-lg"
-            >
-              <div>
-                <p className="font-medium">{student.name}</p>
-                <p className="text-sm text-muted-foreground">{student.grade}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <p className="text-sm font-medium">{student.attendance}%</p>
-                  <p className="text-xs text-muted-foreground">Attendance</p>
+          {filteredStudents.map((student) => {
+            const attendance = student.attendance_percentage ?? 0; // use API field
+            return (
+              <div
+                key={student.id}
+                className="flex items-center justify-between p-4 bg-muted rounded-lg"
+              >
+                <div>
+                  <p className="font-medium">{student.name}</p>
+                  <p className="text-sm text-muted-foreground">{student.class?.name}</p>
                 </div>
-                <Badge
-                  variant={getAttendanceVariant(student.attendance)}
-                  className={getAttendanceClassName(student.attendance)}
-                >
-                  {getAttendanceLabel(student.attendance)}
-                </Badge>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-sm font-medium">{attendance}%</p>
+                    <p className="text-xs text-muted-foreground">Attendance</p>
+                  </div>
+                  <Badge
+                    variant={getAttendanceVariant(attendance)}
+                    className={getAttendanceClassName(attendance)}
+                  >
+                    {getAttendanceLabel(attendance)}
+                  </Badge>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
-          {/* If no students match search */}
           {!isLoading && filteredStudents.length === 0 && (
             <p className="text-sm text-muted-foreground">No students found.</p>
           )}

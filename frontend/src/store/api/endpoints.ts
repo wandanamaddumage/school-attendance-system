@@ -20,7 +20,8 @@ export const Endpoints = {
   GetTeacherStudents: "/teachers/students",
 
   // Teacher - Attendance
-  MarkAttendance: "/attendance",
+  MarkAttendance: "/attendance/mark",
+  GetStudentsByClass: "/teacher/students",
 
   // Reports
   GetStudentReport: "/reports/student",        
