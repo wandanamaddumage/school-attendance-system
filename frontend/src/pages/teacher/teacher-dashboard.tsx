@@ -5,8 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { LogOut, GraduationCap, Calendar, BarChart3 } from "lucide-react"
 import { AttendanceMarking } from "@/components/attendance-marking"
-import { AttendanceReports } from "@/components/attendance-reports"
 import type { User } from "@/types/types"
+import AttendanceReports from "@/components/attendance-reports"
 
 interface TeacherDashboardProps {
   user: User

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { UserIcon, GraduationCapIcon, ArrowLeftIcon } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { StudentRegistration } from "./student-registration"
+import { StudentRegistration } from "./student-registration/student-registration"
 import { TeacherRegistration } from "./teacher-registration/teacher-registration"
 
 type RegistrationType = "student" | "teacher" | null

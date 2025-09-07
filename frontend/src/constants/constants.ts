@@ -9,20 +9,18 @@ export const ATTENDANCE_THRESHOLDS = {
     needsAttention: "Needs Attention",
   };
   
-  export const GRADES = [
-    "Grade 1",
-    "Grade 2",
-    "Grade 3",
-    "Grade 4",
-    "Grade 5-A",
-    "Grade 5-B",
-    "Grade 6-A",
-    "Grade 6-B",
-    "Grade 7",
-    "Grade 8-A",
-    "Grade 8-B",
-    "Grade 9",
-    "Grade 10",
-  ];
+export const GRADES = [
+  { label: "Grade 1", id: 2 },
+  { label: "Grade 2", id: 3 },
+  { label: "Grade 3", id: 4 },
+  { label: "Grade 4", id: 5 },
+  { label: "Grade 5", id: 6 },
+  { label: "Grade 6", id: 7 },
+  { label: "Grade 7", id: 8 },
+  { label: "Grade 8", id: 9 },
+  { label: "Grade 9", id: 10 },
+  { label: "Grade 10", id: 11 },
+];
+
   
   export const BADGE_VARIANT = "outline";

@@ -6,9 +6,9 @@ import { Badge } from "@/components/ui/badge"
 import { LogOut, Users, UserPlus, BarChart3, Calendar } from "lucide-react"
 import { StudentList } from "@/pages/admin/components/student-list"
 import { TeacherList } from "@/pages/admin/components/teacher-list"
-import { AttendanceReports } from "@/components/attendance-reports"
 import type { User } from "@/types/types"
 import { RegistrationSelector } from "./components/registration-selector"
+import AttendanceReports from "@/components/attendance-reports"
 
 interface AdminDashboardProps {
   user: User
@@ -45,15 +45,15 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
 
       <div className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4">
+            {/* <TabsTrigger value="overview">Overview</TabsTrigger> */}
+            <TabsTrigger value="reports">Reports</TabsTrigger>
             <TabsTrigger value="students">Students</TabsTrigger>
             <TabsTrigger value="teachers">Teachers</TabsTrigger>
             <TabsTrigger value="register">Register</TabsTrigger>
-            <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="space-y-6">
+          {/* <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -113,7 +113,7 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> */}
 
           {/* Students */}
           <TabsContent value="students">
