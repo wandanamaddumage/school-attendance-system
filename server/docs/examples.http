@@ -1,0 +1,165 @@
+# School Attendance System API Examples
+
+# Base URL
+@baseUrl = http://localhost:8001/api
+
+# Variables
+@adminToken =
+@teacherToken =
+
+### 1. Login as Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@school.com",
+    "password": "password"
+}
+
+### 2. Login as Teacher
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "teacher@school.com",
+    "password": "password"
+}
+
+### 3. Logout (Admin)
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{adminToken}}
+
+### 4. Create a new class (Admin only)
+POST {{baseUrl}}/classes
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Grade 6"
+}
+
+### 5. Get all classes (Admin)
+GET {{baseUrl}}/classes
+Authorization: Bearer {{adminToken}}
+
+### 6. Create a new teacher (Admin only)
+POST {{baseUrl}}/teachers
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "john.doe@school.com",
+    "password": "password123"
+}
+
+### 7. Get all teachers (Admin)
+GET {{baseUrl}}/teachers
+Authorization: Bearer {{adminToken}}
+
+### 8. Create a new student (Admin only)
+POST {{baseUrl}}/students
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+    "name": "Jane Smith",
+    "class_id": 1
+}
+
+### 9. Get all students (Admin)
+GET {{baseUrl}}/students
+Authorization: Bearer {{adminToken}}
+
+### 10. Get students by class (Admin)
+GET {{baseUrl}}/students?class_id=1
+Authorization: Bearer {{adminToken}}
+
+### 11. Get classes for teacher
+GET {{baseUrl}}/teacher/classes
+Authorization: Bearer {{teacherToken}}
+
+### 12. Get students for teacher
+GET {{baseUrl}}/teacher/students
+Authorization: Bearer {{teacherToken}}
+
+### 13. Mark attendance (Teacher only) - Success case
+POST {{baseUrl}}/attendance/mark
+Authorization: Bearer {{teacherToken}}
+Content-Type: application/json
+
+{
+    "class_id": 1,
+    "date": "2025-09-06",
+    "attendances": [
+        {
+            "student_id": 1,
+            "status": "present"
+        },
+        {
+            "student_id": 2,
+            "status": "absent"
+        },
+        {
+            "student_id": 3,
+            "status": "present"
+        }
+    ]
+}
+
+### 14. Mark attendance - Duplicate case (409 Conflict)
+POST {{baseUrl}}/attendance/mark
+Authorization: Bearer {{teacherToken}}
+Content-Type: application/json
+
+{
+    "class_id": 1,
+    "date": "2025-09-06",
+    "attendances": [
+        {
+            "student_id": 1,
+            "status": "present"
+        }
+    ]
+}
+
+### 15. Get student attendance report
+GET {{baseUrl}}/reports/student/1
+Authorization: Bearer {{adminToken}}
+
+### 16. Get class monthly report
+GET {{baseUrl}}/reports/class?class_id=1&month=2025-09
+Authorization: Bearer {{adminToken}}
+
+### 17. Test unauthorized access (403 Forbidden)
+GET {{baseUrl}}/teachers
+Authorization: Bearer {{teacherToken}}
+
+### 18. Test invalid credentials
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@school.com",
+    "password": "wrongpassword"
+}
+
+### 19. Test missing authentication
+GET {{baseUrl}}/classes
+
+### 20. Test invalid student in wrong class
+POST {{baseUrl}}/attendance/mark
+Authorization: Bearer {{teacherToken}}
+Content-Type: application/json
+
+{
+    "class_id": 1,
+    "date": "2025-09-07",
+    "attendances": [
+        {
+            "student_id": 4,
+            "status": "present"
+        }
+    ]
+}
+

@@ -4,12 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { LogOut, Users, UserPlus, BarChart3, Calendar } from "lucide-react"
-import { TeacherRegistration } from "@/pages/admin/components/teacher-registration"
 import { StudentList } from "@/pages/admin/components/student-list"
 import { TeacherList } from "@/pages/admin/components/teacher-list"
 import { AttendanceReports } from "@/components/attendance-reports"
-import { StudentRegistration } from "./components/student-registration"
 import type { User } from "@/types/types"
+import { RegistrationSelector } from "./components/registration-selector"
 
 interface AdminDashboardProps {
   user: User
@@ -128,10 +127,9 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
 
           {/* Register */}
           <TabsContent value="register" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <StudentRegistration />
-              <TeacherRegistration />
-            </div>
+          <div className="container mx-auto py-8">
+            <RegistrationSelector />
+          </div>
           </TabsContent>
 
           {/* Reports */}
