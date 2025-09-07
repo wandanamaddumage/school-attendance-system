@@ -56,28 +56,26 @@ It includes individual student reports and an optional class report summary.
 
 ## Technical Stack
 
-- **Backend:** PHP (Laravel recommended) or CodeIgniter  
+- **Backend:** PHP (Laravel) 
 - **Frontend:** React.js (Functional Components)  
-- **Database:** MySQL or PostgreSQL  
+- **Database:** MySQL 
 - **Version Control:** Git & GitHub
 
 ---
 
-## Setup Instructions
+
 
 1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
+   git clone git@github.com:wandanamaddumage/school-attendance-system.git
    cd school-attendance-system
 
 2. **Backend Setup:**
-Navigate to backend folder:
+    Navigate to backend folder:
     ```bash
     cd backend
 
     Install dependencies:
 
-   ```bash
     composer install
     Configure .env with your database credentials.
 
@@ -90,26 +88,30 @@ Navigate to backend folder:
     Start backend server:
       php artisan serve
 
-3. ***Frontend Setup***
+3. **Frontend Setup:**
     Navigate to frontend folder:
+    ```bash
      cd frontend
 
     Install dependencies:
      npm install
 
-4. ***Start development server:***
+4. **Start development server:**
+    ```bash
     npm start
 
-5.  ***Open your browser and navigate to:***
+5.  **Open your browser and navigate to:**
     http://localhost:3000
 
-    ***Test Credentials***
+---
 
-    Admin:
+## Test Credentials
+
+  Admin:
     Email: admin@school.com
     Password: password
 
-    Teacher:
+  Teacher:
     Email: teacher@school.com
     Password: password
    
