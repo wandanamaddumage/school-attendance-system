@@ -4,7 +4,7 @@ export type Toast = {
   id: string;
   title: string;
   description?: string;
-  duration?: number; // in ms
+  duration?: number;
 };
 
 export function useToast() {
@@ -15,7 +15,6 @@ export function useToast() {
     const newToast = { ...toast, id };
     setToasts((prev) => [...prev, newToast]);
 
-    // Auto-remove after duration
     if (toast.duration) {
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));

@@ -4,16 +4,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ATTENDANCE_LABELS, ATTENDANCE_THRESHOLDS } from "@/constants/constants";
-import type { Student } from "@/types/types";
 import { useGetAllStudentsQuery } from "@/store/api/splits/students";
 
 export function StudentList() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ✅ Fetch students from API
   const { data: students = [], isLoading, isError } = useGetAllStudentsQuery();
 
-  // ✅ Filtering by name or grade
   const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -63,7 +60,7 @@ export function StudentList() {
 
         <div className="space-y-3">
           {filteredStudents.map((student) => {
-            const attendance = student.attendance_percentage ?? 0; // use API field
+            const attendance = student.attendance_percentage ?? 0; 
             return (
               <div
                 key={student.id}

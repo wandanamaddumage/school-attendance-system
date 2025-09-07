@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useGetClassReportQuery, useGetStudentReportQuery } from "@/store/api/splits/reports";
 import { useGetAllStudentsQuery } from "@/store/api/splits/students";
 import { GRADES } from "@/constants/constants";
+import { SummaryCard } from "./summary-card";
 
 type ReportType = "individual" | "class";
 
@@ -17,17 +18,14 @@ export default function AttendanceReports() {
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
 
-  // Load all students for dropdown
   const { data: students = [], isLoading: studentsLoading } = useGetAllStudentsQuery();
 
-  // Fetch student report
   const {
     data: studentData,
     isLoading: studentLoading,
     error: studentError,
   } = useGetStudentReportQuery(Number(selectedStudent), { skip: !selectedStudent });
 
-  // Fetch class report
   const {
     data: classData,
     isLoading: classLoading,
@@ -37,7 +35,6 @@ export default function AttendanceReports() {
     { skip: !selectedClass || !selectedMonth }
   );
 
-  // Helper for class summary
   const totalDays =
     classData?.students?.length > 0 ? classData.students[0].total_days : 0;
   const averageAttendance =
@@ -50,7 +47,6 @@ export default function AttendanceReports() {
 
   return (
     <div className="space-y-6">
-      {/* Report Type Selection */}
       <div className="flex gap-4">
         <Button
           variant={reportType === "individual" ? "default" : "outline"}
@@ -66,7 +62,6 @@ export default function AttendanceReports() {
         </Button>
       </div>
 
-      {/* Student Selection */}
       {reportType === "individual" && (
         <div className="space-y-2">
           <label className="text-sm font-medium">Select Student</label>
@@ -89,7 +84,6 @@ export default function AttendanceReports() {
         </div>
       )}
 
-      {/* Class Selection */}
       {reportType === "class" && (
         <div className="space-y-2">
           <label className="text-sm font-medium">Class</label>
@@ -117,7 +111,6 @@ export default function AttendanceReports() {
         </div>
       )}
 
-      {/* Individual Report */}
       {reportType === "individual" && selectedStudent && (
         <Card>
           <CardHeader>
@@ -162,7 +155,6 @@ export default function AttendanceReports() {
         </Card>
       )}
 
-      {/* Class Report */}
       {reportType === "class" && selectedClass && selectedMonth && (
         <Card>
           <CardHeader>
@@ -227,19 +219,3 @@ export default function AttendanceReports() {
   );
 }
 
-function SummaryCard({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: string | number;
-  color?: string;
-}) {
-  return (
-    <div className="text-center p-4 bg-muted rounded-lg">
-      <p className={`text-2xl font-bold ${color ? `text-${color}` : ""}`}>{value}</p>
-      <p className="text-sm text-muted-foreground">{label}</p>
-    </div>
-  );
-}

@@ -10,10 +10,8 @@ import { useGetAllTeachersQuery } from "@/store/api/splits/teachers";
 export function TeacherList() {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ✅ Fetch teachers from API
   const { data: teachers = [], isLoading, isError } = useGetAllTeachersQuery();
 
-  // ✅ Search filter
   const filteredTeachers = teachers.filter(
     (teacher: Teacher) =>
       teacher.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -40,14 +38,12 @@ export function TeacherList() {
           />
         </div>
 
-        {/* ✅ Handle Loading, Error, Empty states */}
         {isLoading && <p className="text-sm text-muted-foreground">Loading teachers...</p>}
         {isError && <p className="text-sm text-red-500">Failed to load teachers.</p>}
         {!isLoading && !isError && filteredTeachers.length === 0 && (
           <p className="text-sm text-muted-foreground">No teachers found.</p>
         )}
 
-        {/* ✅ Teacher List */}
         <div className="space-y-3">
           {filteredTeachers.map((teacher: Teacher) => (
             <div

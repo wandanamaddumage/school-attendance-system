@@ -16,7 +16,7 @@ interface AdminDashboardProps {
 }
 
 export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
-  const [activeTab, setActiveTab] = useState("overview")
+  const [activeTab, setActiveTab] = useState("reports")
 
   return (
     <div className="min-h-screen bg-background">
@@ -115,24 +115,20 @@ export function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
             </Card>
           </TabsContent> */}
 
-          {/* Students */}
           <TabsContent value="students">
             <StudentList />
           </TabsContent>
 
-          {/* Teachers */}
           <TabsContent value="teachers">
             <TeacherList />
           </TabsContent>
 
-          {/* Register */}
           <TabsContent value="register" className="space-y-6">
           <div className="container mx-auto py-8">
             <RegistrationSelector />
           </div>
           </TabsContent>
 
-          {/* Reports */}
           <TabsContent value="reports">
             <AttendanceReports />
           </TabsContent>

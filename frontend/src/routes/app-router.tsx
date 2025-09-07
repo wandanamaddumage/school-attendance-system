@@ -25,13 +25,11 @@ export const AppRouter: React.FC<AppRouterProps> = ({ currentUser, onLogin, onLo
   return (
     <Router>
       <Routes>
-        {/* Login Route */}
         <Route
           path="/login"
           element={!currentUser ? <LoginPage onLogin={onLogin} /> : <Navigate to="/" replace />}
         />
 
-        {/* Admin Dashboard */}
         <Route
           path="/admin"
           element={
@@ -41,7 +39,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({ currentUser, onLogin, onLo
           }
         />
 
-        {/* Teacher Dashboard */}
         <Route
           path="/teacher"
           element={
@@ -51,7 +48,6 @@ export const AppRouter: React.FC<AppRouterProps> = ({ currentUser, onLogin, onLo
           }
         />
 
-        {/* Default redirect based on role */}
         <Route
           path="/"
           element={

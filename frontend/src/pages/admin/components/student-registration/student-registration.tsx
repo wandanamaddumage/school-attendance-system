@@ -54,7 +54,6 @@ export function StudentRegistration() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Name Field */}
           <FormField
             name="name"
             label="Student Name"
@@ -63,7 +62,6 @@ export function StudentRegistration() {
             error={errors.name}
           />
 
-          {/* Grade Field */}
           <div className="space-y-2">
             <label className="text-sm font-medium">Class/Grade</label>
             <Select onValueChange={(val) => setValue("class_id", val)} defaultValue="">

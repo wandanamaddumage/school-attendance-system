@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Calendar, CheckCircle, Save, XCircle } from "lucide-react";
@@ -17,7 +15,6 @@ export function AttendanceMarking() {
   const [attendance, setAttendance] = useState<Record<number, "present" | "absent">>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch students whenever selectedClass changes
   const { data: students = [], isLoading: isStudentsLoading } = useGetStudentsByClassQuery(
     selectedClass ? { class_id: Number(selectedClass) } : skipToken
   );
@@ -55,7 +52,6 @@ export function AttendanceMarking() {
         }`
       );
     } catch (err: any) {
-      // If the API returns a message, show it
       const message = err?.data?.message || "Failed to save attendance";
       toast.error(message);
     } finally {
