@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { LogOut, GraduationCap, Calendar, BarChart3 } from "lucide-react"
 import { AttendanceMarking } from "@/components/attendance-marking"
 import type { User } from "@/types/types"
-import AttendanceReports from "./components/attendance-report"
+import ClassAttendanceReports from "@/components/attendance-report"
 
 interface TeacherDashboardProps {
   user: User
@@ -130,7 +130,7 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
           </TabsContent>
 
           <TabsContent value="reports">
-            <AttendanceReports />
+            <ClassAttendanceReports />
           </TabsContent>
         </Tabs>
       </div>

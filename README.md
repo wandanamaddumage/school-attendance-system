@@ -10,10 +10,6 @@ A simple web application to manage student and teacher attendance. This project 
 - [Technical Stack](#technical-stack)
 - [Setup Instructions](#setup-instructions)
 - [Test Credentials](#test-credentials)
-- [Usage](#usage)
-- [Bonus Features](#bonus-features)
-- [Project Structure](#project-structure)
-- [Notes](#notes)
 
 ---
 
@@ -86,29 +82,22 @@ Navigate to backend folder:
     Configure .env with your database credentials.
 
     Run migrations:
-
-    ```bash
-    php artisan migrate
+      php artisan migrate
 
     Seed test data:
-    ```bash
-    php artisan db:seed
+      php artisan db:seed
 
     Start backend server:
-    ```bash
-    php artisan serve
+      php artisan serve
 
 3. ***Frontend Setup***
     Navigate to frontend folder:
-    ```bash
-    cd frontend
+     cd frontend
 
     Install dependencies:
-    ```bash
-    npm install
+     npm install
 
 4. ***Start development server:***
-   ```bash
     npm start
 
 5.  ***Open your browser and navigate to:***

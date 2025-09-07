@@ -9,11 +9,12 @@ import { useGetClassReportQuery, useGetStudentReportQuery } from "@/store/api/sp
 import { useGetAllStudentsQuery } from "@/store/api/splits/students";
 import { GRADES } from "@/constants/constants";
 import { SummaryCard } from "./summary-card";
+import ClassAttendanceReports from "@/components/attendance-report";
 
 type ReportType = "individual" | "class";
 
 export default function AttendanceReports() {
-  const [reportType, setReportType] = useState<ReportType>("individual");
+  const [reportType, setReportType] = useState<ReportType>("class");
   const [selectedStudent, setSelectedStudent] = useState<string>("");
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [selectedMonth, setSelectedMonth] = useState<string>("");
@@ -47,23 +48,38 @@ export default function AttendanceReports() {
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4">
-        <Button
-          variant={reportType === "individual" ? "default" : "outline"}
-          onClick={() => setReportType("individual")}
-        >
-          Individual Report
-        </Button>
+      <div className="flex justify-end gap-4">
         <Button
           variant={reportType === "class" ? "default" : "outline"}
           onClick={() => setReportType("class")}
         >
           Class Report
         </Button>
+        <Button
+          variant={reportType === "individual" ? "default" : "outline"}
+          onClick={() => setReportType("individual")}
+        >
+          Individual Report
+        </Button>
       </div>
 
-      {reportType === "individual" && (
+
+      {reportType === "individual" && (     
+        <div className="space-y-8">
         <div className="space-y-2">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <BarChart3 className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Individual Reports</h1>
+              <p className="text-muted-foreground">Generate detailed attendance reports by Student Name</p>
+            </div>
+          </div>
+        </div>
+  
+        <Card>
+        <div className="space-y-2 px-10">
           <label className="text-sm font-medium">Select Student</label>
           <Select
             value={selectedStudent}
@@ -82,33 +98,29 @@ export default function AttendanceReports() {
           </Select>
           {studentsLoading && <p className="text-sm text-muted-foreground">Loading students...</p>}
         </div>
+        </Card>
+  
+        {selectedClass && selectedMonth && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <div className="h-1 w-8 bg-primary rounded-full"></div>
+              <h2 className="text-xl font-semibold">Report Results</h2>
+            </div>
+  
+            <ClassReport
+              selectedClass={selectedClass}
+              selectedMonth={selectedMonth}
+              classData={classData}
+              classLoading={classLoading}
+              classError={classError}
+            />
+          </div>
+        )}
+      </div>
       )}
 
       {reportType === "class" && (
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Class</label>
-          <Select
-            value={selectedClass}
-            onValueChange={(val) => setSelectedClass(val)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select class/grade" />
-            </SelectTrigger>
-            <SelectContent>
-              {GRADES.map((grade) => (
-                <SelectItem key={grade.id} value={String(grade.id)}>
-                  {grade.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <label className="text-sm font-medium">Month</label>
-          <Input
-            type="month"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-          />
-        </div>
+       <ClassAttendanceReports/>
       )}
 
       {reportType === "individual" && selectedStudent && (
