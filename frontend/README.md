@@ -1,69 +1,60 @@
-# React + TypeScript + Vite
+# School Attendance System – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **frontend application** for the School Attendance System.  
+It is built with **React.js** and integrates with the backend API to manage students, teachers, attendance, and reports.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Authentication**: Login/Logout for Admin and Teacher roles.
+- **Role-based Views**:
+  - Admin: Register students & teachers, view reports.
+  - Teacher: Mark attendance & view class/student reports.
+- **Attendance Management**: Mark Present/Absent for students.
+- **Reports**:
+  - Individual Student Report with summary.
+  - Class Report (bonus feature).
+- **Responsive UI** with reusable ShadCN components.
+- Toast notifications for success/failure messages.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **React.js** (Functional Components & Hooks)
+- **Redux Toolkit + RTK Query** (State management & API fetching)
+- **ShadCN/UI + Tailwind CSS** (UI components & styling)
+- **React Router DOM** (Routing)
+- **React Toastify** (Notifications)
+- **Vite / npm** (Development server & package manager)
+- **JWT Authentication** (Access & refresh tokens)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Setup Instructions
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. Navigate to the frontend folder
+    cd frontend
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+    Install dependencies:
+    npm install
+
+### 2. Start development server:
+        npm start 
+
+### 3. Open your browser and navigate to:
+        http://localhost:5173
+
+---
+
+## Test Credentials
+
+      Admin:
+        Email: admin@school.com
+        Password: password
+
+      Teacher:
+        Email: teacher@school.com
+        Password: password
+      
