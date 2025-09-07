@@ -1,40 +1,51 @@
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { GraduationCap, Mail, Lock } from "lucide-react"
-import type { User } from "@/App"
-import { loginSchema, type LoginSchema } from "./schema"
-import { FormField } from "@/components/form/input/input-field"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GraduationCap, Mail, Lock } from "lucide-react";
+import { loginSchema, type LoginSchema } from "./schema";
+import { FormField } from "@/components/form/input/input-field";
+import { useLoginMutation } from "@/store/api/splits/auth";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "@/store/slices/auth";
+import { useNavigate } from "react-router-dom";
+import type { User } from "@/App";
 
 interface LoginFormProps {
-  onLogin: (user: User) => void
+  onLogin: (user: User) => void;
 }
 
 export function LoginForm({ onLogin }: LoginFormProps) {
-  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch();
+  const [login, { isLoading, error }] = useLoginMutation();
+  const navigate = useNavigate();
 
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<LoginSchema>({
+  const { handleSubmit, control, formState: { errors } } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
-  })
+  });
 
   const onSubmit = async (data: LoginSchema) => {
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      const response = await login(data).unwrap();
 
-    if (data.email === "admin@school.com" && data.password === "password") {
-      onLogin({ id: "1", name: "Admin User", email: data.email, role: "admin" })
-    } else if (data.email === "teacher@school.com" && data.password === "password") {
-      onLogin({ id: "2", name: "Teacher Smith", email: data.email, role: "teacher" })
+      // Save to Redux
+      dispatch(setCredentials({ token: response.token, user: response.user }));
+
+      // Update App state
+      onLogin(response.user);
+
+      // Redirect based on role
+      if (response.user.role === "admin") {
+        navigate("/admin", { replace: true });
+      } else if (response.user.role === "teacher") {
+        navigate("/teacher", { replace: true });
+      }
+
+    } catch (err) {
+      console.error("Login failed:", err);
     }
-    setIsLoading(false)
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 to-secondary/5 p-4">
@@ -73,6 +84,12 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             </Button>
           </form>
 
+          {error && (
+            <p className="text-red-500 text-sm mt-2">
+              {("data" in error && (error as any).data?.message) || "Login failed"}
+            </p>
+          )}
+
           <div className="mt-6 p-4 bg-muted rounded-lg">
             <p className="text-sm font-medium mb-2">Test Credentials:</p>
             <div className="text-xs space-y-1 text-muted-foreground">
@@ -83,5 +100,5 @@ export function LoginForm({ onLogin }: LoginFormProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
