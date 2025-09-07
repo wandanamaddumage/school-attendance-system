@@ -29,13 +29,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
     try {
       const response = await login(data).unwrap();
 
-      // Save to Redux
       dispatch(setCredentials({ token: response.token, user: response.user }));
 
-      // Update App state
       onLogin(response.user);
 
-      // Redirect based on role
       if (response.user.role === "admin") {
         navigate("/admin", { replace: true });
       } else if (response.user.role === "teacher") {
