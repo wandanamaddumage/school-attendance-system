@@ -2,7 +2,7 @@ import type { User, UserRole } from "@/App";
 import { TeacherDashboard } from "@/pages/teacher/teacher-dashboard";
 import { AdminDashboard } from "@/pages/admin/admin-dashboard";
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { LoginPage } from "@/pages/log-in/page";
 
 interface AppRouterProps {

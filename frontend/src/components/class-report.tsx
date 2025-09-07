@@ -21,7 +21,6 @@ interface ClassReportProps {
 }
 
 export default function ClassReport({
-  selectedClass,
   selectedMonth,
   classData,
   classLoading,

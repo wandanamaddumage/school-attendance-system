@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { BarChart3, Calendar, CheckCircle, Save, XCircle } from "lucide-react";
+import { Card, CardContent } from "./ui/card";
+import { Calendar, CheckCircle, Save, XCircle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Button } from "./ui/button";
 import { GRADES } from "@/constants/constants";
