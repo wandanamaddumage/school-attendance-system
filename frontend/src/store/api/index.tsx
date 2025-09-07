@@ -16,7 +16,7 @@ const ENDPOINTS_TO_AVOID_RETRY = [Endpoints.Login]
 
 const staggeredBaseQuery = retry(
   fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_BASE_URL,    // or env.urls.apiUrl
+    baseUrl: import.meta.env.VITE_API_BASE_URL,
     prepareHeaders: (headers) => {
       const token = getAccessToken()
       if (token) {
