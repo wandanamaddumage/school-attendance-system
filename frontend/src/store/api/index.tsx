@@ -21,7 +21,7 @@ const staggeredBaseQuery = retry(
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
-      headers.set("Accept", "application/json"); // 👈 ensures Laravel returns JSON
+      headers.set("Accept", "application/json");
       return headers;
     },
   }),

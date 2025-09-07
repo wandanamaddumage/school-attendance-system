@@ -5,8 +5,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { LogOut, GraduationCap, Calendar, BarChart3 } from "lucide-react"
 import { AttendanceMarking } from "@/components/attendance-marking"
-import { AttendanceReports } from "@/components/attendance-reports"
 import type { User } from "@/types/types"
+import AttendanceReports from "./components/attendance-report"
 
 interface TeacherDashboardProps {
   user: User
@@ -14,7 +14,7 @@ interface TeacherDashboardProps {
 }
 
 export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
-  const [activeTab, setActiveTab] = useState("overview")
+  const [activeTab, setActiveTab] = useState("reports")
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,14 +43,14 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
 
       <div className="container mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="attendance">Mark Attendance</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2">
+            {/* <TabsTrigger value="overview">Overview</TabsTrigger> */}
             <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsTrigger value="attendance">Mark Attendance</TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="space-y-6">
+          {/* <TabsContent value="overview" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -123,14 +123,12 @@ export function TeacherDashboard({ user, onLogout }: TeacherDashboardProps) {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </TabsContent> */}
 
-          {/* Attendance Tab */}
           <TabsContent value="attendance">
             <AttendanceMarking />
           </TabsContent>
 
-          {/* Reports Tab */}
           <TabsContent value="reports">
             <AttendanceReports />
           </TabsContent>

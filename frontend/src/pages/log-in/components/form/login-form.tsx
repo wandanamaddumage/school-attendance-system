@@ -90,8 +90,8 @@ export function LoginForm({ onLogin }: LoginFormProps) {
           <div className="mt-6 p-4 bg-muted rounded-lg">
             <p className="text-sm font-medium mb-2">Test Credentials:</p>
             <div className="text-xs space-y-1 text-muted-foreground">
-              <p><strong>Admin:</strong> admin@school.com / password</p>
-              <p><strong>Teacher:</strong> teacher@school.com / password</p>
+              <p><strong>Admin:</strong> admin@school.com / password123</p>
+              <p><strong>Teacher:</strong> teacher@school.com / password123</p>
             </div>
           </div>
         </CardContent>
