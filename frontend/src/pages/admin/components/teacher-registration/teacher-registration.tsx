@@ -36,7 +36,7 @@ export function TeacherRegistration() {
       reset();
     } catch (error: any) {
       console.error("API error:", error);
-      toast.error(error?.data?.message || "Server error, please try again later");
+      toast.error(error?.data?.message || "Server error, please try again later.");
     }
   };
 
