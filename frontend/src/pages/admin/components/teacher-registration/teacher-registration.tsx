@@ -6,19 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/form/input/input-field";
 import { teacherRegistrationSchema } from "./schema";
+import { useCreateTeacherMutation } from "@/store/api/splits/teachers";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type TeacherRegistrationSchema = z.infer<typeof teacherRegistrationSchema>;
 
-function useToast() {
-  return {
-    toast: ({ title, description }: { title: string; description: string }) => {
-      alert(`${title}\n${description}`);
-    },
-  };
-}
-
 export function TeacherRegistration() {
-  const { toast } = useToast();
+  const [createTeacher] = useCreateTeacherMutation();
 
   const {
     handleSubmit,
@@ -31,18 +26,23 @@ export function TeacherRegistration() {
   });
 
   const onSubmit = async (data: TeacherRegistrationSchema) => {
-    // simulate API request
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    console.log("Form submitted with data:", data);
+    try {
+      const response = await createTeacher(data).unwrap();
+      console.log("API response:", response);
 
-    toast({
-      title: "Teacher registered successfully",
-      description: `${data.name} has been added to the system`,
-    });
+      toast.success(`${data.name} has been added to the system!`);
 
-    reset();
+      reset();
+    } catch (error: any) {
+      console.error("API error:", error);
+      toast.error(error?.data?.message || "Server error, please try again later");
+    }
   };
 
   return (
+    <>
+    <ToastContainer position="top-right" autoClose={3000} />
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
@@ -82,5 +82,7 @@ export function TeacherRegistration() {
         </form>
       </CardContent>
     </Card>
+    </>
+ 
   );
 }
