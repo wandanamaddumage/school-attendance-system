@@ -18,8 +18,6 @@ The School Attendance System streamlines the process of tracking student attenda
 - **Administrators** can register students and teachers, and access comprehensive attendance reports.
 - **Teachers** can mark daily attendance for their assigned classes and view attendance reports for their classes.
 
-![User Roles](./screenshots/user-roles.png)
-
 ## Features
 
 ### User Authentication & Role Management
